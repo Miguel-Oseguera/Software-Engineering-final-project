@@ -1,0 +1,46 @@
+.mini-order-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background: #fff;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.mini-order-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
+
+.mini-order-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.mini-order-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.mini-order-price {
+  font-size: 15px;
+  color: #333;
+}
+
+.mini-order-qty {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  background: black;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+}

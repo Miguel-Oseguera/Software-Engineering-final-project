@@ -1,0 +1,133 @@
+.cart-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 40px;
+  box-sizing: border-box;
+  background: #ffffff;
+  color: #000000;
+  position: relative;
+}
+
+/* HEADER */
+.header {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 200px 1fr 150px;
+  align-items: center;
+}
+
+.left-logo {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 32px;
+  font-weight: bold;
+  color: #000000;
+}
+
+.amazon {
+  color: orange;
+}
+
+.tagline {
+  font-size: 12px;
+  margin-top: -4px;
+  color: #444444;
+}
+
+/* SEARCH */
+.center-search {
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 900px;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  background: #ffffff;
+  color: #000000;
+}
+
+/* ICONS */
+.right-icons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.icon {
+  font-size: 30px;
+  cursor: pointer;
+}
+
+/* NAV BUTTONS */
+.nav-buttons {
+  margin-top: 20px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+.nav-buttons button {
+  padding: 12px 0;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  color: #000000;
+  transition: 0.2s;
+}
+
+.nav-buttons button:hover {
+  background: #e8e8e8;
+}
+
+/* CART ITEMS */
+.cart-items {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 120px;
+}
+
+.cart-item {
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 25px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.empty {
+  font-size: 18px;
+  color: #555;
+}
+
+/* FIXED PURCHASE BUTTON */
+.purchase-btn {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  padding: 16px 28px;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.purchase-btn:hover {
+  background: #333333;
+}
