@@ -8,6 +8,9 @@ export default function MainPage() {
 
   const [trending, setTrending] = useState([]);
   const [newest, setNewest] = useState([]);
+  const [cartCount, setCartCount] = useState(
+    () => (JSON.parse(localStorage.getItem("cart")) || []).length
+  );
 
   // Fetch trending + newest products
   useEffect(() => {
@@ -43,7 +46,10 @@ export default function MainPage() {
 
         {/* RIGHT ICONS */}
         <div className="right-icons">
-          <div className="icon" onClick={() => navigate("/cart")}>🛒</div>
+          <div className="icon cart-icon" onClick={() => navigate("/cart")}>
+            🛒
+            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+          </div>
           <div className="icon" onClick={() => navigate("/profile")}>👤</div>
         </div>
 
@@ -54,8 +60,8 @@ export default function MainPage() {
         <button onClick={() => navigate("/")}>Home</button>
         <button onClick={() => navigate("/orders")}>Orders</button>
         <button>Deals</button>
-        <button>Selling</button>
-        <button>Listings</button>
+        <button onClick={() => navigate("/selling")}>Selling</button>
+        <button onClick={() => navigate("/listings")}>Listings</button>
         <button>Sold</button>
       </nav>
 
@@ -68,7 +74,7 @@ export default function MainPage() {
             <p>Loading trending products...</p>
           ) : (
             trending.map(product => (
-              <MiniProduct key={product.id} product={product} />
+              <MiniProduct key={product.id} product={product} onCartChange={setCartCount} />
             ))
           )}
         </div>
@@ -83,7 +89,7 @@ export default function MainPage() {
             <p>Loading newest products...</p>
           ) : (
             newest.map(product => (
-              <MiniProduct key={product.id} product={product} />
+              <MiniProduct key={product.id} product={product} onCartChange={setCartCount} />
             ))
           )}
         </div>

@@ -6,35 +6,34 @@ import "./CartPage.css";
 export default function CartPage() {
   const navigate = useNavigate();
 
-  const [cartItems, setCartItems] = useState([]);
-  const [orderedItems, setOrderedItems] = useState([]);
+  const [cartItems, setCartItems] = useState(
+    () => JSON.parse(localStorage.getItem("cart")) || []
+  );
+  const [orderedItems, setOrderedItems] = useState(
+    () => JSON.parse(localStorage.getItem("ordered")) || []
+  );
 
-  // Load cart + ordered from localStorage
-  useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    const storedOrdered = JSON.parse(localStorage.getItem("ordered")) || [];
-    setCartItems(storedCart);
-    setOrderedItems(storedOrdered);
-  }, []);
-
-  // Save cart changes
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Save ordered changes
   useEffect(() => {
     localStorage.setItem("ordered", JSON.stringify(orderedItems));
   }, [orderedItems]);
 
-  // Purchase → move cart items to ordered
+  const handleRemove = (index) => {
+    const updated = cartItems.filter((_, i) => i !== index);
+    setCartItems(updated);
+  };
+
   const handlePurchase = () => {
     if (cartItems.length === 0) return;
-
     const newOrdered = [...orderedItems, ...cartItems];
     setOrderedItems(newOrdered);
     setCartItems([]);
   };
+
+  const total = cartItems.reduce((sum, item) => sum + Number(item.price || 0), 0);
 
   return (
     <div className="cart-container">
@@ -63,8 +62,8 @@ export default function CartPage() {
         <button onClick={() => navigate("/")}>Home</button>
         <button onClick={() => navigate("/orders")}>Orders</button>
         <button>Deals</button>
-        <button>Selling</button>
-        <button>Listings</button>
+        <button onClick={() => navigate("/selling")}>Selling</button>
+        <button onClick={() => navigate("/listings")}>Listings</button>
         <button>Sold</button>
       </nav>
 
@@ -74,15 +73,23 @@ export default function CartPage() {
           <p className="empty">Your cart is empty.</p>
         ) : (
           cartItems.map((item, index) => (
-            <MiniProductCart key={index} product={item} />
+            <div key={index} className="cart-item-row">
+              <MiniProductCart product={item} />
+              <button className="remove-btn" onClick={() => handleRemove(index)}>Remove</button>
+            </div>
           ))
         )}
       </div>
 
-      {/* PURCHASE BUTTON */}
-      <button className="purchase-btn" onClick={handlePurchase}>
-        Purchase
-      </button>
+      {/* TOTAL + PURCHASE */}
+      {cartItems.length > 0 && (
+        <div className="cart-footer">
+          <span className="cart-total">Total: ${total.toFixed(2)}</span>
+          <button className="purchase-btn" onClick={handlePurchase}>
+            Purchase ({cartItems.length} item{cartItems.length !== 1 ? "s" : ""})
+          </button>
+        </div>
+      )}
 
     </div>
   );

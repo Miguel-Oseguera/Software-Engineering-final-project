@@ -5,6 +5,8 @@ import ProductPage from "./ProductPage";
 import CartPage from "./CartPage";
 import OrdersPage from "./OrdersPage";
 import ProfilePage from "./ProfilePage";
+import SellingPage from "./SellingPage";
+import ListingsPage from "./ListingsPage";
 import MiniProduct from "./MiniProduct";
 import MiniProductCart from "./MiniProductCart";
 import MiniProductOrder from "./MiniProductOrder";
@@ -26,6 +28,8 @@ export default function App() {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/selling" element={<SellingPage />} />
+        <Route path="/listings" element={<ListingsPage />} />
 
       </Routes>
     </Router>

@@ -51,8 +51,8 @@ export default function ProfilePage() {
         <button onClick={() => navigate("/")}>Home</button>
         <button onClick={() => navigate("/orders")}>Orders</button>
         <button>Deals</button>
-        <button>Selling</button>
-        <button>Listings</button>
+        <button onClick={() => navigate("/selling")}>Selling</button>
+        <button onClick={() => navigate("/listings")}>Listings</button>
         <button>Sold</button>
       </nav>
 

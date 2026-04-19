@@ -56,3 +56,20 @@
   color: #333;
   font-weight: bold;
 }
+
+.mini-add-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px 0;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.mini-add-btn:hover {
+  background: #333;
+}
