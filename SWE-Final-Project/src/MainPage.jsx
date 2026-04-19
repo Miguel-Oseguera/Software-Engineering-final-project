@@ -62,7 +62,7 @@ export default function MainPage() {
         <button>Deals</button>
         <button onClick={() => navigate("/selling")}>Selling</button>
         <button onClick={() => navigate("/listings")}>Listings</button>
-        <button>Sold</button>
+        <button onClick={() => navigate("/sold")}>Sold</button>
       </nav>
 
       {/* FEATURED / TRENDING */}

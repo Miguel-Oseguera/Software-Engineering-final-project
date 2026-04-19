@@ -149,3 +149,62 @@
 }
 
 .remove-listing-btn:hover { background: #cc0000; color: #fff; }
+
+.listing-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edit-listing-btn {
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.2s;
+}
+
+.edit-listing-btn:hover { background: #000; color: #fff; }
+
+.selling-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.selling-edit-form input,
+.selling-edit-form textarea {
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.selling-edit-form textarea { resize: vertical; }
+
+.edit-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.cancel-btn {
+  padding: 10px 20px;
+  background: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.cancel-btn:hover { background: #f0f0f0; }

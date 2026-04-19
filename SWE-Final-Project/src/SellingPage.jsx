@@ -4,7 +4,8 @@ import "./SellingPage.css";
 
 export default function SellingPage() {
   const navigate = useNavigate();
-  const username = localStorage.getItem("user");
+  const raw = localStorage.getItem("user");
+  const username = raw ? ((() => { try { return JSON.parse(raw).username; } catch { return raw; } })()) : "";
 
   const [listings, setListings] = useState([]);
   const [name, setName] = useState("");
@@ -13,6 +14,8 @@ export default function SellingPage() {
   const [imageUrl, setImageUrl] = useState("");
   const [quantity, setQuantity] = useState("1");
   const [message, setMessage] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [editFields, setEditFields] = useState({});
 
   const fetchListings = () => {
     fetch(`/api/products/seller/${username}`)
@@ -50,6 +53,29 @@ export default function SellingPage() {
     fetchListings();
   };
 
+  const startEdit = (item) => {
+    let imageUrl = "";
+    try { imageUrl = JSON.parse(item.images || "[]")[0] || ""; } catch {}
+    setEditingId(item.id);
+    setEditFields({
+      name: item.name,
+      price: item.price,
+      description: item.description || "",
+      imageUrl,
+      quantity: item.quantity_remaining,
+    });
+  };
+
+  const handleEdit = async (id) => {
+    const res = await fetch(`/api/products/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(editFields),
+    });
+    const data = await res.json();
+    if (data.success) { setEditingId(null); fetchListings(); }
+  };
+
   return (
     <div className="selling-container">
 
@@ -73,7 +99,7 @@ export default function SellingPage() {
         <button>Deals</button>
         <button className="active" onClick={() => navigate("/selling")}>Selling</button>
         <button onClick={() => navigate("/listings")}>Listings</button>
-        <button>Sold</button>
+        <button onClick={() => navigate("/sold")}>Sold</button>
       </nav>
 
       <div className="selling-body">
@@ -109,6 +135,23 @@ export default function SellingPage() {
             listings.map(item => {
               let thumbnail = "";
               try { thumbnail = JSON.parse(item.images || "[]")[0] || ""; } catch {}
+
+              if (editingId === item.id) {
+                return (
+                  <div key={item.id} className="selling-edit-form">
+                    <input placeholder="Name" value={editFields.name} onChange={e => setEditFields({...editFields, name: e.target.value})} />
+                    <input type="number" placeholder="Price" value={editFields.price} onChange={e => setEditFields({...editFields, price: e.target.value})} />
+                    <textarea placeholder="Description" value={editFields.description} onChange={e => setEditFields({...editFields, description: e.target.value})} rows={2} />
+                    <input placeholder="Image URL" value={editFields.imageUrl} onChange={e => setEditFields({...editFields, imageUrl: e.target.value})} />
+                    <input type="number" placeholder="Quantity" value={editFields.quantity} onChange={e => setEditFields({...editFields, quantity: e.target.value})} />
+                    <div className="edit-actions">
+                      <button className="submit-btn" onClick={() => handleEdit(item.id)}>Save</button>
+                      <button className="cancel-btn" onClick={() => setEditingId(null)}>Cancel</button>
+                    </div>
+                  </div>
+                );
+              }
+
               return (
                 <div key={item.id} className="selling-listing-row">
                   {thumbnail
@@ -120,9 +163,10 @@ export default function SellingPage() {
                     <p className="selling-listing-price">${item.price}</p>
                     <p className="selling-listing-qty">Qty: {item.quantity_remaining}</p>
                   </div>
-                  <button className="remove-listing-btn" onClick={() => handleRemove(item.id)}>
-                    Remove
-                  </button>
+                  <div className="listing-actions">
+                    <button className="edit-listing-btn" onClick={() => startEdit(item)}>Edit</button>
+                    <button className="remove-listing-btn" onClick={() => handleRemove(item.id)}>Remove</button>
+                  </div>
                 </div>
               );
             })

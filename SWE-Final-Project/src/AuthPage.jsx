@@ -21,7 +21,7 @@ export default function AuthPage() {
       const data = await res.json();
 
       if (data.success) {
-        localStorage.setItem("user", username);
+        localStorage.setItem("user", JSON.stringify({ username: data.username, email: data.email }));
         window.location.href = "/";
       } else {
         alert("Invalid username or password");

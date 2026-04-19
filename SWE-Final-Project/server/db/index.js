@@ -34,6 +34,17 @@ export async function initDB() {
   } catch {
     // column already exists
   }
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS sales (
+      id INTEGER NOT NULL,
+      product_id INTEGER NOT NULL,
+      product_name TEXT NOT NULL,
+      seller TEXT,
+      buyer TEXT,
+      price REAL,
+      sold_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
 }
 
 export default db;

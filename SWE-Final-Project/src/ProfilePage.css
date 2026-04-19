@@ -1,3 +1,20 @@
+.signout-btn {
+  margin-top: 20px;
+  padding: 10px 24px;
+  background: #fff;
+  color: #cc0000;
+  border: 1px solid #cc0000;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.signout-btn:hover {
+  background: #cc0000;
+  color: #fff;
+}
+
 .profile-container {
   width: 100%;
   min-height: 100vh;

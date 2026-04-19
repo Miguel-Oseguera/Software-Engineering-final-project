@@ -27,6 +27,7 @@ export default function ProductPage() {
 
   return (
     <div className="product-container">
+      <button className="back-btn" onClick={() => navigate(-1)}>← Back</button>
       <div className="product-content">
         <div className="product-images">
           <img src={images[0]} alt={product.name} />

@@ -14,6 +14,7 @@ import cors from "cors";
 
 import productsRouter from "./routes/products.js";
 import authRoutes from "./routes/auth.js";
+import ordersRouter from "./routes/orders.js";
 import { initDB } from "./db/index.js";
 
 const app = express();
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/products", productsRouter);
+app.use("/api/orders", ordersRouter);
 app.use("/auth", authRoutes);
 
 const PORT = process.env.PORT || 5000;

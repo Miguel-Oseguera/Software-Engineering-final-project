@@ -26,8 +26,24 @@ export default function CartPage() {
     setCartItems(updated);
   };
 
-  const handlePurchase = () => {
+  const handlePurchase = async () => {
     if (cartItems.length === 0) return;
+    const raw = localStorage.getItem("user");
+    const buyer = raw ? ((() => { try { return JSON.parse(raw).username; } catch { return raw; } })()) : "";
+
+    try {
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: cartItems, buyer }),
+      });
+      const data = await res.json();
+      if (!data.success) { alert("Purchase failed. Try again."); return; }
+    } catch {
+      alert("Could not connect to server.");
+      return;
+    }
+
     const newOrdered = [...orderedItems, ...cartItems];
     setOrderedItems(newOrdered);
     setCartItems([]);
@@ -64,7 +80,7 @@ export default function CartPage() {
         <button>Deals</button>
         <button onClick={() => navigate("/selling")}>Selling</button>
         <button onClick={() => navigate("/listings")}>Listings</button>
-        <button>Sold</button>
+        <button onClick={() => navigate("/sold")}>Sold</button>
       </nav>
 
       {/* CART ITEMS */}

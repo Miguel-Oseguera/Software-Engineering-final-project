@@ -1,3 +1,18 @@
+.back-btn {
+  background: none;
+  border: 1px solid #ccc;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  margin-bottom: 24px;
+  transition: 0.2s;
+}
+
+.back-btn:hover {
+  background: #f0f0f0;
+}
+
 .product-container {
   width: 100%;
   min-height: 100vh;

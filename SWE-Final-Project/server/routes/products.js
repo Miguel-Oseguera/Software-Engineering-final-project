@@ -94,6 +94,34 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.put("/:id", async (req, res) => {
+  const { name, price, description, imageUrl, quantity } = req.body;
+  try {
+    const images = imageUrl ? JSON.stringify([imageUrl]) : null;
+    await db.execute({
+      sql: `UPDATE products SET
+              name = COALESCE(?, name),
+              price = COALESCE(?, price),
+              description = COALESCE(?, description),
+              images = COALESCE(?, images),
+              quantity_remaining = COALESCE(?, quantity_remaining)
+            WHERE id = ?`,
+      args: [
+        name || null,
+        price ? parseFloat(price) : null,
+        description ?? null,
+        images,
+        quantity ? parseInt(quantity) : null,
+        req.params.id,
+      ],
+    });
+    res.json({ success: true });
+  } catch (err) {
+    console.error("PUT /api/products error:", err.message);
+    res.status(500).json({ error: "Failed to update listing" });
+  }
+});
+
 router.delete("/:id", async (req, res) => {
   try {
     await db.execute({

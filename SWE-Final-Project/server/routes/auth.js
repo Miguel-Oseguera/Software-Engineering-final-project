@@ -17,7 +17,8 @@ router.post("/login", async (req, res) => {
     });
 
     if (result.rows.length > 0) {
-      res.json({ success: true });
+      const user = result.rows[0];
+      res.json({ success: true, username: user.username, email: user.email });
     } else {
       res.json({ success: false });
     }

@@ -5,18 +5,25 @@ import "./ProfilePage.css";
 export default function ProfilePage() {
   const navigate = useNavigate();
 
+  const handleSignOut = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("cart");
+    navigate("/login");
+  };
+
   // Safely load user info
   let username = "Unknown User";
   let email = "No email provided";
 
-  try {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
+  const raw = localStorage.getItem("user");
+  if (raw) {
+    try {
+      const user = JSON.parse(raw);
       username = user.username || username;
       email = user.email || email;
+    } catch {
+      username = raw;
     }
-  } catch (err) {
-    console.error("Error reading user data:", err);
   }
 
   return (
@@ -53,7 +60,7 @@ export default function ProfilePage() {
         <button>Deals</button>
         <button onClick={() => navigate("/selling")}>Selling</button>
         <button onClick={() => navigate("/listings")}>Listings</button>
-        <button>Sold</button>
+        <button onClick={() => navigate("/sold")}>Sold</button>
       </nav>
 
       {/* PROFILE CONTENT */}
@@ -77,6 +84,8 @@ export default function ProfilePage() {
           <p>
             <strong>Email:</strong> {email}
           </p>
+
+          <button className="signout-btn" onClick={handleSignOut}>Sign Out</button>
         </div>
 
       </div>

@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import MiniProduct from "./MiniProduct";
 import "./ListingsPage.css";
 
 export default function ListingsPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(searchParams.get("q") || "");
   const [sort, setSort] = useState("newest");
   const [cartCount, setCartCount] = useState(
     () => (JSON.parse(localStorage.getItem("cart")) || []).length
@@ -44,7 +45,7 @@ export default function ListingsPage() {
             className="search-bar"
             placeholder="Search products..."
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={e => { setSearch(e.target.value); setSearchParams({ q: e.target.value }); }}
           />
         </div>
         <div className="right-icons">
@@ -62,7 +63,7 @@ export default function ListingsPage() {
         <button>Deals</button>
         <button onClick={() => navigate("/selling")}>Selling</button>
         <button className="active" onClick={() => navigate("/listings")}>Listings</button>
-        <button>Sold</button>
+        <button onClick={() => navigate("/sold")}>Sold</button>
       </nav>
 
       <div className="listings-toolbar">

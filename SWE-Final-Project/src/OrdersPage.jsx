@@ -6,23 +6,22 @@ import "./OrdersPage.css";
 export default function OrdersPage() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("ordered")) || [];
-
-    // Group identical products
     const grouped = {};
     stored.forEach(item => {
       const key = item.id;
-      if (!grouped[key]) {
-        grouped[key] = { ...item, quantity: 1 };
-      } else {
-        grouped[key].quantity += 1;
-      }
+      if (!grouped[key]) grouped[key] = { ...item, quantity: 1 };
+      else grouped[key].quantity += 1;
     });
-
     setOrders(Object.values(grouped));
   }, []);
+
+  const filtered = orders.filter(o =>
+    o.name?.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="orders-container">
@@ -37,7 +36,7 @@ export default function OrdersPage() {
         </div>
 
         <div className="center-search">
-          <input className="search-bar" placeholder="Search..." />
+          <input className="search-bar" placeholder="Search orders..." value={search} onChange={e => setSearch(e.target.value)} />
         </div>
 
         <div className="right-icons">
@@ -53,20 +52,18 @@ export default function OrdersPage() {
         <button>Deals</button>
         <button onClick={() => navigate("/selling")}>Selling</button>
         <button onClick={() => navigate("/listings")}>Listings</button>
-        <button>Sold</button>
+        <button onClick={() => navigate("/sold")}>Sold</button>
       </nav>
 
       {/* ORDERS LIST */}
       <div className="orders-list">
         {orders.length === 0 ? (
           <p className="empty">No orders yet.</p>
+        ) : filtered.length === 0 ? (
+          <p className="empty">No orders match your search.</p>
         ) : (
-          orders.map((item, index) => (
-            <MiniProductOrder
-              key={index}
-              product={item}
-              quantity={item.quantity}
-            />
+          filtered.map((item, index) => (
+            <MiniProductOrder key={index} product={item} quantity={item.quantity} />
           ))
         )}
       </div>
