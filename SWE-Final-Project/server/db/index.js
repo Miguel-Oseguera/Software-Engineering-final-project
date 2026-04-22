@@ -34,6 +34,11 @@ export async function initDB() {
   } catch {
     // column already exists
   }
+  try {
+    await db.execute(`ALTER TABLE products ADD COLUMN category TEXT`);
+  } catch {
+    // column already exists
+  }
   await db.execute(`
     CREATE TABLE IF NOT EXISTS sales (
       id INTEGER NOT NULL,

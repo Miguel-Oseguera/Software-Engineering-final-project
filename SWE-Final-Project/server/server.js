@@ -16,11 +16,13 @@ import productsRouter from "./routes/products.js";
 import authRoutes from "./routes/auth.js";
 import ordersRouter from "./routes/orders.js";
 import { initDB } from "./db/index.js";
+import seedRouter from "./routes/seed.js";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use("/api/seed", seedRouter);
 
 app.get("/", (req, res) => {
   res.send("Backend is running");
