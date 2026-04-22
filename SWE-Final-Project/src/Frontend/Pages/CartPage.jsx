@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MiniProductCart from "./MiniProductCart";
-import "./CartPage.css";
+import "../Css/CartPage.css";
 
 export default function CartPage() {
   const navigate = useNavigate();

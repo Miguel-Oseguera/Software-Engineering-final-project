@@ -1,5 +1,5 @@
 import React from "react";
-import "./MiniProductOrder.css";
+import "../Css/MiniProductOrder.css";
 
 export default function MiniProductOrder({ product, quantity }) {
   if (!product) return null;

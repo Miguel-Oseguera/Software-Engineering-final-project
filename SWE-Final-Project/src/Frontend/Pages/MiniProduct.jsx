@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./MiniProduct.css";
+import "../Css/MiniProduct.css";
 
 export default function MiniProduct({ product, onCartChange }) {
   const navigate = useNavigate();

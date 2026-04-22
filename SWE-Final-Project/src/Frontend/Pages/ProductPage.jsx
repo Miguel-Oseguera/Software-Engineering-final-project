@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./ProductPage.css";
+import "../Css/ProductPage.css";
 
 export default function ProductPage() {
   const { id } = useParams();

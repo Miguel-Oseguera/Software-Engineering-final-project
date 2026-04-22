@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import MiniProduct from "./MiniProduct";
-import "./ListingsPage.css";
+import "../Css/ListingsPage.css";
 
 export default function ListingsPage() {
   const navigate = useNavigate();
