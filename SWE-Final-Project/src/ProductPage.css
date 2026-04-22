@@ -1,0 +1,164 @@
+.back-btn {
+  background: none;
+  border: 1px solid #ccc;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  margin-bottom: 24px;
+  transition: 0.2s;
+}
+
+.back-btn:hover {
+  background: #f0f0f0;
+}
+
+.product-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 40px;
+  box-sizing: border-box;
+  background: #ffffff;
+  color: #000000;
+}
+
+/* HEADER (same as other pages) */
+.header {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 200px 1fr 150px;
+  align-items: center;
+}
+
+.left-logo {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.amazon {
+  color: orange;
+}
+
+.tagline {
+  font-size: 12px;
+  margin-top: -4px;
+  color: #444;
+}
+
+/* SEARCH BAR */
+.center-search {
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 900px;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+}
+
+/* ICONS */
+.right-icons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.icon {
+  font-size: 30px;
+  cursor: pointer;
+}
+
+/* NAV BUTTONS */
+.nav-buttons {
+  margin-top: 20px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+.nav-buttons button {
+  padding: 12px 0;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.nav-buttons button:hover {
+  background: #e8e8e8;
+}
+
+/* PRODUCT CONTENT LAYOUT */
+.product-content {
+  margin-top: 40px;
+  display: flex;
+  gap: 40px;
+}
+
+/* LEFT SIDE IMAGES */
+.product-images {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.product-images img {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+}
+
+/* RIGHT SIDE DETAILS */
+.product-details {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.product-details h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.product-details .price {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.product-details .description {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 30px;
+}
+
+/* ADD TO CART BUTTON */
+.add-to-cart-btn {
+  background: #000000;
+  color: #ffffff;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.add-to-cart-btn:hover {
+  background: #333333;
+}

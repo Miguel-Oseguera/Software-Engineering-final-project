@@ -1,0 +1,75 @@
+.mini-product {
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mini-product:hover {
+  background: #f5f5f5;
+}
+
+.mini-product-image-wrapper {
+  width: 100%;
+  height: 180px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mini-product-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mini-product-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #555;
+  font-size: 14px;
+}
+
+.mini-product-title {
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 6px;
+  color: #000;
+}
+
+.mini-product-price {
+  font-size: 15px;
+  color: #333;
+  font-weight: bold;
+}
+
+.mini-add-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px 0;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.mini-add-btn:hover {
+  background: #333;
+}

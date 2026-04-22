@@ -1,0 +1,137 @@
+.signout-btn {
+  margin-top: 20px;
+  padding: 10px 24px;
+  background: #fff;
+  color: #cc0000;
+  border: 1px solid #cc0000;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.signout-btn:hover {
+  background: #cc0000;
+  color: #fff;
+}
+
+.profile-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 40px;
+  box-sizing: border-box;
+  background: #ffffff;
+  color: #000000;
+}
+
+/* HEADER */
+.header {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 200px 1fr 150px;
+  align-items: center;
+}
+
+.left-logo {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.amazon {
+  color: orange;
+}
+
+.tagline {
+  font-size: 12px;
+  margin-top: -4px;
+  color: #444;
+}
+
+/* SEARCH */
+.center-search {
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 900px;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+}
+
+/* ICONS */
+.right-icons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.icon {
+  font-size: 30px;
+  cursor: pointer;
+}
+
+/* NAV BUTTONS */
+.nav-buttons {
+  margin-top: 20px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+.nav-buttons button {
+  padding: 12px 0;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+/* PROFILE CONTENT */
+.profile-content {
+  margin-top: 40px;
+  display: flex;
+  gap: 40px;
+}
+
+/* USER ICON */
+.circle {
+  width: 120px;
+  height: 120px;
+  background: #ddd;
+  border-radius: 50%;
+  font-size: 48px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* DETAILS BOX */
+.details-box {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.details-box h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.details-box p {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
