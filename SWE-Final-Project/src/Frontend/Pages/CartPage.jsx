@@ -12,6 +12,7 @@ export default function CartPage() {
   const [orderedItems, setOrderedItems] = useState(
     () => JSON.parse(localStorage.getItem("ordered")) || []
   );
+  const [purchased, setPurchased] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
@@ -22,8 +23,7 @@ export default function CartPage() {
   }, [orderedItems]);
 
   const handleRemove = (index) => {
-    const updated = cartItems.filter((_, i) => i !== index);
-    setCartItems(updated);
+    setCartItems(cartItems.filter((_, i) => i !== index));
   };
 
   const handlePurchase = async () => {
@@ -44,9 +44,10 @@ export default function CartPage() {
       return;
     }
 
-    const newOrdered = [...orderedItems, ...cartItems];
-    setOrderedItems(newOrdered);
+    setOrderedItems([...orderedItems, ...cartItems]);
     setCartItems([]);
+    setPurchased(true);
+    setTimeout(() => setPurchased(false), 4000);
   };
 
   const total = cartItems.reduce((sum, item) => sum + Number(item.price || 0), 0);
@@ -55,57 +56,105 @@ export default function CartPage() {
     <div className="cart-container">
 
       {/* HEADER */}
-      <header className="header">
-        <div className="left-logo">
-          <div className="logo">
-            fake<span className="amazon">amazon</span>
-          </div>
-          <p className="tagline">NOT THE REAL ONE</p>
+      <header className="cart-header">
+        <div className="cart-logo-wrap" onClick={() => navigate("/")}>
+          <span className="cart-logo-fake">fake</span>
+          <span className="cart-logo-amazon">amazon</span>
+          <p className="cart-tagline">NOT THE REAL ONE</p>
         </div>
-
-        <div className="center-search">
-          <input className="search-bar" placeholder="Search..." />
+        <div className="cart-search-wrap">
+          <input className="cart-search" placeholder="Search..." />
         </div>
-
-        <div className="right-icons">
-          <div className="icon" onClick={() => navigate("/cart")}>🛒</div>
-          <div className="icon" onClick={() => navigate("/profile")}>👤</div>
+        <div className="cart-icons">
+          <span className="cart-icon cart-icon-active" onClick={() => navigate("/cart")}>🛒</span>
+          <span className="cart-icon" onClick={() => navigate("/profile")}>👤</span>
         </div>
       </header>
 
       {/* NAV */}
-      <nav className="nav-buttons">
-        <button onClick={() => navigate("/")}>Home</button>
-        <button onClick={() => navigate("/orders")}>Orders</button>
-        <button>Deals</button>
-        <button onClick={() => navigate("/selling")}>Selling</button>
-        <button onClick={() => navigate("/listings")}>Listings</button>
-        <button onClick={() => navigate("/sold")}>Sold</button>
+      <nav className="cart-nav">
+        {[["Home","/"],["Orders","/orders"],["Deals","#"],["Selling","/selling"],["Listings","/listings"],["Sold","/sold"]].map(([label, path]) => (
+          <button key={label} className="cart-nav-btn" onClick={() => navigate(path)}>{label}</button>
+        ))}
       </nav>
 
-      {/* CART ITEMS */}
-      <div className="cart-items">
-        {cartItems.length === 0 ? (
-          <p className="empty">Your cart is empty.</p>
-        ) : (
-          cartItems.map((item, index) => (
-            <div key={index} className="cart-item-row">
-              <MiniProductCart product={item} />
-              <button className="remove-btn" onClick={() => handleRemove(index)}>Remove</button>
-            </div>
-          ))
+      {/* SUCCESS BANNER */}
+      {purchased && (
+        <div className="cart-success-banner">
+          ✅ Order placed successfully! Check your <span onClick={() => navigate("/orders")}>Orders</span> page.
+        </div>
+      )}
+
+      {/* PAGE TITLE */}
+      <div className="cart-page-title">
+        <h1>Shopping Cart</h1>
+        {cartItems.length > 0 && (
+          <span className="cart-count">{cartItems.length} item{cartItems.length !== 1 ? "s" : ""}</span>
         )}
       </div>
 
-      {/* TOTAL + PURCHASE */}
-      {cartItems.length > 0 && (
-        <div className="cart-footer">
-          <span className="cart-total">Total: ${total.toFixed(2)}</span>
-          <button className="purchase-btn" onClick={handlePurchase}>
-            Purchase ({cartItems.length} item{cartItems.length !== 1 ? "s" : ""})
-          </button>
+      {/* BODY */}
+      <div className="cart-body">
+
+        {/* ITEMS LIST */}
+        <div className="cart-items-col">
+          {cartItems.length === 0 ? (
+            <div className="cart-empty">
+              <div className="cart-empty-icon">🛒</div>
+              <p className="cart-empty-title">Your cart is empty</p>
+              <p className="cart-empty-sub">Looks like you haven't added anything yet.</p>
+              <button className="cart-shop-btn" onClick={() => navigate("/")}>Start Shopping</button>
+            </div>
+          ) : (
+            cartItems.map((item, index) => (
+              <div key={index} className="cart-item-row">
+                <MiniProductCart product={item} />
+                <div className="cart-item-actions">
+                  <span className="cart-item-price">${Number(item.price || 0).toFixed(2)}</span>
+                  <button className="cart-remove-btn" onClick={() => handleRemove(index)}>Remove</button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
-      )}
+
+        {/* ORDER SUMMARY SIDEBAR */}
+        {cartItems.length > 0 && (
+          <aside className="cart-summary">
+            <h2 className="cart-summary-title">Order Summary</h2>
+
+            <div className="cart-summary-rows">
+              {cartItems.map((item, i) => (
+                <div key={i} className="cart-summary-row">
+                  <span className="cart-summary-item-name">{item.name || item.title || "Item"}</span>
+                  <span>${Number(item.price || 0).toFixed(2)}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="cart-summary-divider" />
+
+            <div className="cart-summary-row">
+              <span>Subtotal</span>
+              <span>${total.toFixed(2)}</span>
+            </div>
+            <div className="cart-summary-row">
+              <span>Shipping</span>
+              <span className="cart-free">FREE</span>
+            </div>
+            <div className="cart-summary-row cart-summary-total">
+              <span>Total</span>
+              <span>${total.toFixed(2)}</span>
+            </div>
+
+            <button className="cart-purchase-btn" onClick={handlePurchase}>
+              Purchase ({cartItems.length} item{cartItems.length !== 1 ? "s" : ""})
+            </button>
+
+            <p className="cart-secure-note">🔒 Secure checkout</p>
+          </aside>
+        )}
+      </div>
 
     </div>
   );
