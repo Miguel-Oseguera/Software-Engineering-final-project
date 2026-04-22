@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MiniProductOrder from "./MiniProductOrder";
-import "./OrdersPage.css";
+import "../Css/OrdersPage.css";
 
 export default function OrdersPage() {
   const navigate = useNavigate();

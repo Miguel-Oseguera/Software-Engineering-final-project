@@ -1,16 +1,16 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import AuthPage from "./AuthPage";
-import MainPage from "./MainPage";
-import ProductPage from "./ProductPage";
-import CartPage from "./CartPage";
-import OrdersPage from "./OrdersPage";
-import ProfilePage from "./ProfilePage";
-import SellingPage from "./SellingPage";
-import ListingsPage from "./ListingsPage";
-import SoldPage from "./SoldPage";
-import MiniProduct from "./MiniProduct";
-import MiniProductCart from "./MiniProductCart";
-import MiniProductOrder from "./MiniProductOrder";
+import AuthPage from "./AuthPage.jsx";
+import MainPage from "./MainPage.jsx";
+import ProductPage from "./ProductPage.jsx";
+import CartPage from "./CartPage.jsx";
+import OrdersPage from "./OrdersPage.jsx";
+import ProfilePage from "./ProfilePage.jsx";
+import SellingPage from "./SellingPage.jsx";
+import ListingsPage from "./ListingsPage.jsx";
+import SoldPage from "./SoldPage.jsx";
+import MiniProduct from "./MiniProduct.jsx";
+import MiniProductCart from "./MiniProductCart.jsx";
+import MiniProductOrder from "./MiniProductOrder.jsx";
 
 export default function App() {
   const isLoggedIn = localStorage.getItem("user");

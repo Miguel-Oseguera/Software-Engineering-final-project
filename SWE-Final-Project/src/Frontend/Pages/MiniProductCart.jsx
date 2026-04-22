@@ -1,5 +1,5 @@
 import React from "react";
-import "./MiniProductCart.css";
+import "../Css/MiniProductCart.css";
 
 export default function MiniProductCart({ product }) {
   if (!product) return null;

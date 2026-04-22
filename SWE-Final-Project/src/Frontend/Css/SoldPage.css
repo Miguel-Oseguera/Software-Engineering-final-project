@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@300;400;500&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #f5f0e8;
+}
+
+.sold-container {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #faf7f2 0%, #f0ebe0 40%, #e8e0d0 100%);
+  padding: 0;
+}
+
+/* HEADER */
+.header {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 200px 1fr 160px;
+  align-items: center;
+  padding: 14px 32px;
+  background: linear-gradient(180deg, #7c3a1e 0%, #a0522d 100%);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 20px;
+  box-shadow: 0 2px 16px rgba(124, 58, 30, 0.3);
+}
+
+.left-logo { display: flex; flex-direction: column; cursor: pointer; }
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.amazon { color: #f5c842; }
+
+.tagline {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 3px;
+}
+
+.center-search { display: flex; width: 100%; }
+
+.search-bar {
+  width: 100%;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.95);
+  color: #111;
+  outline: none;
+  transition: box-shadow 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+.search-bar::placeholder { color: #999; }
+.search-bar:focus { box-shadow: 0 0 0 3px rgba(245, 200, 66, 0.4); }
+
+.right-icons { display: flex; justify-content: flex-end; gap: 18px; }
+
+.icon {
+  font-size: 22px;
+  cursor: pointer;
+  color: rgba(255,255,255,0.7);
+  transition: color 0.2s;
+}
+
+.icon:hover { color: #f5c842; }
+.cart-icon { position: relative; }
+
+.cart-badge {
+  position: absolute;
+  top: -5px; right: -7px;
+  background: #f5c842;
+  color: #7c3a1e;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 50%;
+  width: 17px; height: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* NAV */
+.nav-buttons {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  background: rgba(124, 58, 30, 0.06);
+  border-bottom: 1px solid rgba(124, 58, 30, 0.1);
+  padding: 8px 28px;
+  gap: 6px;
+}
+
+.nav-buttons button {
+  padding: 8px 20px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  color: #7a6a5a;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.nav-buttons button:hover {
+  background: rgba(124, 58, 30, 0.08);
+  border-color: rgba(124, 58, 30, 0.2);
+  color: #7c3a1e;
+}
+
+.nav-buttons button.active {
+  background: rgba(124, 58, 30, 0.12);
+  border-color: #a0522d;
+  color: #7c3a1e;
+  font-weight: 600;
+}
+
+/* BODY */
+.sold-body { padding: 28px; }
+
+.sold-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.sold-header-row h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.sold-revenue {
+  font-size: 14px;
+  color: #7c3a1e;
+  background: rgba(124, 58, 30, 0.08);
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(124, 58, 30, 0.15);
+  font-weight: 500;
+}
+
+.empty {
+  color: #aaa;
+  font-size: 15px;
+  text-align: center;
+  padding: 60px 0;
+}
+
+/* TABLE */
+.sold-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(124, 58, 30, 0.06);
+  border: 1px solid rgba(124, 58, 30, 0.08);
+}
+
+.sold-table th {
+  text-align: left;
+  padding: 13px 18px;
+  background: #faf7f2;
+  border-bottom: 1px solid rgba(124, 58, 30, 0.1);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #8a7a6a;
+  font-weight: 500;
+}
+
+.sold-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(124, 58, 30, 0.06);
+  color: #333;
+}
+
+.sold-table tr:last-child td { border-bottom: none; }
+
+.sold-table tr:hover td {
+  background: #faf7f2;
+}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./SellingPage.css";
+import "../Css/SellingPage.css";
 
 export default function SellingPage() {
   const navigate = useNavigate();

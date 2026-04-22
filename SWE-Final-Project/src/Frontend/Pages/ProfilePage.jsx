@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./ProfilePage.css";
+import "../Css/ProfilePage.css";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
