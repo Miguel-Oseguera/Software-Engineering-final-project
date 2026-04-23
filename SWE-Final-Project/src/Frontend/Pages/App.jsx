@@ -11,6 +11,7 @@ import SoldPage from "./SoldPage.jsx";
 import MiniProduct from "./MiniProduct.jsx";
 import MiniProductCart from "./MiniProductCart.jsx";
 import MiniProductOrder from "./MiniProductOrder.jsx";
+import DealsPage from "./DealsPage.jsx";
 
 export default function App() {
   const isLoggedIn = localStorage.getItem("user");
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/selling" element={<SellingPage />} />
         <Route path="/listings" element={<ListingsPage />} />
         <Route path="/sold" element={<SoldPage />} />
+        <Route path="/deals" element={<DealsPage />} />
 
       </Routes>
     </Router>

@@ -99,7 +99,7 @@ export default function ListingsPage() {
 
       {/* NAV */}
       <nav className="lp-nav">
-        {[["Home","/"],["Orders","/orders"],["Deals","#"],["Selling","/selling"],["Listings","/listings"],["Sold","/sold"]].map(([label, path]) => (
+        {[["Home","/"],["Orders","/orders"],["Deals","/deals"],["Selling","/selling"],["Listings","/listings"],["Sold","/sold"]].map(([label, path]) => (
           <button key={label} className={`lp-nav-btn${label === "Listings" ? " active" : ""}`} onClick={() => navigate(path)}>{label}</button>
         ))}
       </nav>

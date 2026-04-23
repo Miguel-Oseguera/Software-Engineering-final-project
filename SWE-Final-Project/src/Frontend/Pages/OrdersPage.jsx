@@ -49,7 +49,7 @@ export default function OrdersPage() {
       <nav className="nav-buttons">
         <button onClick={() => navigate("/")}>Home</button>
         <button className="active">Orders</button>
-        <button>Deals</button>
+        <button onClick={() => navigate("/deals")}>Deals</button>
         <button onClick={() => navigate("/selling")}>Selling</button>
         <button onClick={() => navigate("/listings")}>Listings</button>
         <button onClick={() => navigate("/sold")}>Sold</button>
