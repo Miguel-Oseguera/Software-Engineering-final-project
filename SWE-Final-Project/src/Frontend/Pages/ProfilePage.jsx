@@ -125,7 +125,7 @@ export default function ProfilePage() {
 
       {/* NAV */}
       <nav className="pf-nav">
-        {[["Home","/"],["Orders","/orders"],["Deals","#"],["Selling","/selling"],["Listings","/listings"],["Sold","/sold"]].map(([label, path]) => (
+        {[["Home","/"],["Orders","/orders"],["Deals","/deals"],["Selling","/selling"],["Listings","/listings"],["Sold","/sold"]].map(([label, path]) => (
           <button key={label} className="pf-nav-btn" onClick={() => navigate(path)}>{label}</button>
         ))}
       </nav>

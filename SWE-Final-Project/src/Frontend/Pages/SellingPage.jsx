@@ -96,7 +96,7 @@ export default function SellingPage() {
       <nav className="nav-buttons">
         <button onClick={() => navigate("/")}>Home</button>
         <button onClick={() => navigate("/orders")}>Orders</button>
-        <button>Deals</button>
+        <button onClick={() => navigate("/deals")}>Deals</button>
         <button className="active" onClick={() => navigate("/selling")}>Selling</button>
         <button onClick={() => navigate("/listings")}>Listings</button>
         <button onClick={() => navigate("/sold")}>Sold</button>
