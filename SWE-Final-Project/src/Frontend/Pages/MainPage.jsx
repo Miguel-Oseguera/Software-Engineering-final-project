@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Css/MainPage.css";
+import Navbar from "../components/Navbar";
 
 const CATEGORIES = ["All","beauty","fragrances","furniture","groceries","home-decoration","kitchen-accessories","laptops","mens-shirts","mens-shoes","mens-watches","mobile-accessories","skin-care","smartphones","sports-accessories","sunglasses","tablets","tops","womens-bags","womens-dresses","womens-jewellery","womens-shoes","womens-watches"];
 
@@ -144,11 +145,7 @@ export default function MainPage() {
       </header>
 
       {/* NAV */}
-      <nav className="mp-nav">
-        {[["Home","/"],["Orders","/orders"],["Deals","/deals"],["Selling","/selling"],["Listings","/listings"],["Sold","/sold"]].map(([label, path]) => (
-          <button key={label} className="mp-nav-btn" onClick={() => navigate(path)}>{label}</button>
-        ))}
-      </nav>
+      <Navbar active="Home" navClass="mp-nav" btnClass="mp-nav-btn" />
 
       {/* HERO BANNER */}
       <div className="mp-hero">
