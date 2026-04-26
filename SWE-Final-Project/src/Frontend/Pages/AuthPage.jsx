@@ -9,7 +9,6 @@ export default function AuthPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
 
-  // 🔐 LOGIN
   const handleLogin = async () => {
     try {
       const res = await fetch("/auth/login", {
@@ -21,7 +20,16 @@ export default function AuthPage() {
       const data = await res.json();
 
       if (data.success) {
-        localStorage.setItem("user", JSON.stringify({ username: data.username, email: data.email }));
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            id: data.id,
+            username: data.username,
+            email: data.email,
+            is_admin: Number(data.is_admin || 0),
+          })
+        );
+
         window.location.href = "/";
       } else {
         alert("Invalid username or password");
@@ -32,7 +40,6 @@ export default function AuthPage() {
     }
   };
 
-  // 🆕 REGISTER
   const handleRegister = async () => {
     if (!username || !password || !email) {
       alert("Please fill all fields");
@@ -68,8 +75,6 @@ export default function AuthPage() {
   return (
     <div className="container">
       <div className="card full">
-
-        {/* HEADER */}
         <div className="card-header">
           <h2>
             fake<span className="amazon">amazon</span>
@@ -77,29 +82,18 @@ export default function AuthPage() {
           <p>NOT THE REAL ONE</p>
         </div>
 
-        {/* BODY */}
         <div className="card-body">
           <div className="form-box">
             <h1 className="title">
               {isLogin ? "Login Screen" : "Create User Screen"}
             </h1>
 
-            {/* USERNAME */}
             <label>USERNAME</label>
-            <input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
+            <input value={username} onChange={(e) => setUsername(e.target.value)} />
 
-            {/* PASSWORD */}
             <label>PASSWORD</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
-            {/* REGISTER ONLY */}
             {!isLogin && (
               <>
                 <label>Confirm Password</label>
@@ -110,21 +104,16 @@ export default function AuthPage() {
                 />
 
                 <label>Email</label>
-                <input
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+                <input value={email} onChange={(e) => setEmail(e.target.value)} />
               </>
             )}
 
-            {/* TOGGLE */}
             {isLogin && (
               <p className="link" onClick={() => setIsLogin(false)}>
                 Create User
               </p>
             )}
 
-            {/* BUTTON */}
             <button onClick={isLogin ? handleLogin : handleRegister}>
               {isLogin ? "Login" : "Create User"}
             </button>

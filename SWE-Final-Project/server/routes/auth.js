@@ -3,12 +3,8 @@ import db from "../db/index.js";
 
 const router = express.Router();
 
-
-// 🔐 LOGIN
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
-
-  console.log("LOGIN:", username, password); // debug
 
   try {
     const result = await db.execute({
@@ -18,43 +14,46 @@ router.post("/login", async (req, res) => {
 
     if (result.rows.length > 0) {
       const user = result.rows[0];
-      res.json({ success: true, username: user.username, email: user.email });
+
+      res.json({
+        success: true,
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        is_admin: Number(user.is_admin || 0),
+      });
     } else {
       res.json({ success: false });
     }
   } catch (err) {
     console.error("LOGIN ERROR:", err);
-    res.status(500).send("Login error");
+    res.status(500).json({ error: "Login error" });
   }
 });
 
-
-// 🆕 REGISTER
 router.post("/register", async (req, res) => {
   const { username, password, email } = req.body;
 
-  console.log("REGISTER:", username, password, email); // debug
-
-  // basic check to avoid undefined error
   if (!username || !password || !email) {
-    return res.status(400).send("Missing fields");
+    return res.status(400).json({ error: "Missing fields" });
   }
 
   try {
     await db.execute({
-      sql: "INSERT INTO auth_users (username, password, email) VALUES (?, ?, ?)",
+      sql: `
+        INSERT INTO auth_users (username, password, email, is_admin)
+        VALUES (?, ?, ?, 0)
+      `,
       args: [username, password, email],
     });
 
     res.json({ success: true });
   } catch (err) {
     console.error("REGISTER ERROR:", err);
-    res.status(500).send("Error creating user");
+    res.status(500).json({ error: "Error creating user" });
   }
 });
 
-
-// (optional) test route so /auth works in browser
 router.get("/", (req, res) => {
   res.send("Auth route working");
 });

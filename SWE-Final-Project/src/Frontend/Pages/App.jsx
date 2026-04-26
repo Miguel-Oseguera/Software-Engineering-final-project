@@ -8,25 +8,19 @@ import ProfilePage from "./ProfilePage.jsx";
 import SellingPage from "./SellingPage.jsx";
 import ListingsPage from "./ListingsPage.jsx";
 import SoldPage from "./SoldPage.jsx";
-import MiniProduct from "./MiniProduct.jsx";
-import MiniProductCart from "./MiniProductCart.jsx";
-import MiniProductOrder from "./MiniProductOrder.jsx";
 import DealsPage from "./DealsPage.jsx";
+import AdminPage from "./AdminPage.jsx";
 
 export default function App() {
-  const isLoggedIn = localStorage.getItem("user");
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const isLoggedIn = !!user;
 
   return (
     <Router>
       <Routes>
-        <Route
-          path="/"
-          element={isLoggedIn ? <MainPage /> : <Navigate to="/login" />}
-        />
+        <Route path="/" element={isLoggedIn ? <MainPage /> : <Navigate to="/login" />} />
         <Route path="/login" element={<AuthPage />} />
         <Route path="/product/:id" element={<ProductPage />} />
-
-        {/* ⭐ NEW CART ROUTE */}
         <Route path="/cart" element={<CartPage />} />
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/profile" element={<ProfilePage />} />
@@ -35,6 +29,14 @@ export default function App() {
         <Route path="/sold" element={<SoldPage />} />
         <Route path="/deals" element={<DealsPage />} />
 
+        <Route
+          path="/admin"
+          element={
+            isLoggedIn && Number(user?.is_admin) === 1
+              ? <AdminPage />
+              : <Navigate to="/" />
+          }
+        />
       </Routes>
     </Router>
   );

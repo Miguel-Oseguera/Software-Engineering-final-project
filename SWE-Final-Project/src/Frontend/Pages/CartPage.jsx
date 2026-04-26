@@ -50,7 +50,10 @@ export default function CartPage() {
     setTimeout(() => setPurchased(false), 4000);
   };
 
-  const total = cartItems.reduce((sum, item) => sum + Number(item.price || 0), 0);
+  const TAX_RATE = 0.0825;
+  const subtotal = cartItems.reduce((sum, item) => sum + Number(item.price || 0), 0);
+  const tax = subtotal * TAX_RATE;
+  const total = subtotal + tax;
 
   return (
     <div className="cart-container">
@@ -136,7 +139,11 @@ export default function CartPage() {
 
             <div className="cart-summary-row">
               <span>Subtotal</span>
-              <span>${total.toFixed(2)}</span>
+              <span>${subtotal.toFixed(2)}</span>
+            </div>
+            <div className="cart-summary-row">
+              <span>Tax (8.25%)</span>
+              <span>${tax.toFixed(2)}</span>
             </div>
             <div className="cart-summary-row">
               <span>Shipping</span>
