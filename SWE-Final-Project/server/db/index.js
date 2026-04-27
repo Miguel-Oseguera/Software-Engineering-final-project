@@ -17,6 +17,7 @@ export async function initDB() {
       email TEXT NOT NULL
     )
   `);
+
   await db.execute(`
     CREATE TABLE IF NOT EXISTS products (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,21 +30,13 @@ export async function initDB() {
       created_at TEXT DEFAULT (datetime('now'))
     )
   `);
-  try {
-    await db.execute(`ALTER TABLE products ADD COLUMN seller TEXT`);
-  } catch {
-    // column already exists
-  }
-  try {
-    await db.execute(`ALTER TABLE products ADD COLUMN category TEXT`);
-  } catch {
-    // column already exists
-  }
-  try {
-    await db.execute(`ALTER TABLE products ADD COLUMN original_price REAL`);
-  } catch {
-    // column already exists
-  }
+
+  try { await db.execute(`ALTER TABLE products ADD COLUMN seller TEXT`); } catch {}
+  try { await db.execute(`ALTER TABLE products ADD COLUMN category TEXT`); } catch {}
+  try { await db.execute(`ALTER TABLE products ADD COLUMN original_price REAL`); } catch {}
+  try { await db.execute(`ALTER TABLE products ADD COLUMN updated_at TEXT`); } catch {}
+  try { await db.execute(`ALTER TABLE auth_users ADD COLUMN is_admin INTEGER DEFAULT 0`); } catch {}
+
   await db.execute(`
     CREATE TABLE IF NOT EXISTS sales (
       id INTEGER NOT NULL,
@@ -55,6 +48,7 @@ export async function initDB() {
       sold_at TEXT DEFAULT (datetime('now'))
     )
   `);
+
   await db.execute(`
     CREATE TABLE IF NOT EXISTS discount_codes (
       code TEXT PRIMARY KEY,
@@ -64,6 +58,7 @@ export async function initDB() {
       created_at TEXT DEFAULT (datetime('now'))
     )
   `);
+
   await db.execute(`
     CREATE TABLE IF NOT EXISTS ratings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -74,6 +69,7 @@ export async function initDB() {
       created_at TEXT DEFAULT (datetime('now'))
     )
   `);
+
   await db.execute(`
     CREATE TABLE IF NOT EXISTS payment_methods (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,7 +81,7 @@ export async function initDB() {
       is_default INTEGER DEFAULT 0,
       created_at TEXT DEFAULT (datetime('now'))
     )
-  \`);
+  `);
 }
 
 export default db;
