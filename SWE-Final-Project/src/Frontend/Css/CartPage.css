@@ -178,6 +178,7 @@
 .cart-discount-input {
   flex: 1; padding: 8px 12px; font-size: 13px; font-family: 'Georgia', serif;
   border: 1px solid #ccc; border-radius: 6px; outline: none; background: #fdf9f6; min-width: 0;
+  color: #000;
 }
 .cart-discount-input:focus { border-color: #c87533; }
 .cart-discount-btn {
