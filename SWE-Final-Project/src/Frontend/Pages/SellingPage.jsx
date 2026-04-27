@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Css/SellingPage.css";
+import Navbar from "../components/Navbar";
 
 const API = import.meta.env.VITE_API_URL || "";
 
@@ -95,14 +96,7 @@ export default function SellingPage() {
         </div>
       </header>
 
-      <nav className="nav-buttons">
-        <button onClick={() => navigate("/")}>Home</button>
-        <button onClick={() => navigate("/orders")}>Orders</button>
-        <button onClick={() => navigate("/deals")}>Deals</button>
-        <button className="active" onClick={() => navigate("/selling")}>Selling</button>
-        <button onClick={() => navigate("/listings")}>Listings</button>
-        <button onClick={() => navigate("/sold")}>Sold</button>
-      </nav>
+      <Navbar active="Selling" navClass="selling-nav" btnClass="selling-nav-btn" />
 
       <div className="selling-body">
 

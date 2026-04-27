@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Css/SoldPage.css";
+import Navbar from "../components/Navbar";
 
 export default function SoldPage() {
   const navigate = useNavigate();
@@ -41,14 +42,7 @@ export default function SoldPage() {
         </div>
       </header>
 
-      <nav className="nav-buttons">
-        <button onClick={() => navigate("/")}>Home</button>
-        <button onClick={() => navigate("/orders")}>Orders</button>
-        <button onClick={() => navigate("/deals")}>Deals</button>
-        <button onClick={() => navigate("/selling")}>Selling</button>
-        <button onClick={() => navigate("/listings")}>Listings</button>
-        <button className="active" onClick={() => navigate("/sold")}>Sold</button>
-      </nav>
+      <Navbar active="Sold" navClass="sold-nav" btnClass="sold-nav-btn" />
 
       <div className="sold-body">
         <div className="sold-header-row">

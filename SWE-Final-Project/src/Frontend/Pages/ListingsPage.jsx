@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import MiniProduct from "./MiniProduct";
 import "../Css/ListingsPage.css";
+import Navbar from "../components/Navbar";
 
 const API = import.meta.env.VITE_API_URL || "";
 
@@ -100,11 +101,7 @@ export default function ListingsPage() {
       </header>
 
       {/* NAV */}
-      <nav className="lp-nav">
-        {[["Home","/"],["Orders","/orders"],["Deals","/deals"],["Selling","/selling"],["Listings","/listings"],["Sold","/sold"]].map(([label, path]) => (
-          <button key={label} className={`lp-nav-btn${label === "Listings" ? " active" : ""}`} onClick={() => navigate(path)}>{label}</button>
-        ))}
-      </nav>
+      <Navbar active="Listings" navClass="lp-nav" btnClass="lp-nav-btn" />
 
       {/* BODY */}
       <div className="lp-body">

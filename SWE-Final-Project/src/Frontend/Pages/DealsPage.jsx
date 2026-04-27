@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Css/DealsPage.css";
+import Navbar from "../components/Navbar";
 
 const API = import.meta.env.VITE_API_URL || "";
 
@@ -272,17 +273,7 @@ export default function DealsPage() {
         </div>
       </header>
 
-      <nav className="dp-nav">
-        {navLinks.map(([label, path]) => (
-          <button
-            key={label}
-            className={`dp-nav-btn${label === "Deals" ? " active" : ""}`}
-            onClick={() => navigate(path)}
-          >
-            {label}
-          </button>
-        ))}
-      </nav>
+      <Navbar active="Deals" navClass="dp-nav" btnClass="dp-nav-btn" />
 
       <div className="dp-banner">
         <div className="dp-banner-left">

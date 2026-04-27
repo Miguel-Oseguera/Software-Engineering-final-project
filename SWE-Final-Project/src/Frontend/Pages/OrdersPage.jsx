@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Css/OrdersPage.css";
+import Navbar from "../components/Navbar";
 
 const TAX_RATE = 0.0825;
 const SHIPPING_THRESHOLD = 25;
@@ -279,17 +280,7 @@ export default function OrdersPage() {
       </header>
 
       {/* NAV */}
-      <nav className="orders-nav">
-        {[["Home","/"],["Orders","/orders"],["Deals","/deals"],["Selling","/selling"],["Listings","/listings"],["Sold","/sold"]].map(([label, path]) => (
-          <button
-            key={label}
-            className={`orders-nav-btn${label === "Orders" ? " active" : ""}`}
-            onClick={() => navigate(path)}
-          >
-            {label}
-          </button>
-        ))}
-      </nav>
+      <Navbar active="Orders" navClass="orders-nav" btnClass="orders-nav-btn" />
 
       {/* PAGE CONTENT */}
       <div className="orders-page-body">
