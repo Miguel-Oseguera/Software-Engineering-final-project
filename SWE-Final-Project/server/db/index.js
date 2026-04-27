@@ -39,6 +39,11 @@ export async function initDB() {
   } catch {
     // column already exists
   }
+  try {
+    await db.execute(`ALTER TABLE products ADD COLUMN original_price REAL`);
+  } catch {
+    // column already exists
+  }
   await db.execute(`
     CREATE TABLE IF NOT EXISTS sales (
       id INTEGER NOT NULL,
@@ -50,6 +55,37 @@ export async function initDB() {
       sold_at TEXT DEFAULT (datetime('now'))
     )
   `);
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS discount_codes (
+      code TEXT PRIMARY KEY,
+      percent_off REAL NOT NULL,
+      active INTEGER DEFAULT 1,
+      expires_at TEXT,
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS ratings (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      product_id TEXT NOT NULL,
+      username TEXT NOT NULL DEFAULT 'anonymous',
+      stars INTEGER NOT NULL,
+      comment TEXT DEFAULT '',
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS payment_methods (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL,
+      cardholder_name TEXT NOT NULL,
+      last_four TEXT NOT NULL,
+      expiry TEXT NOT NULL,
+      card_type TEXT DEFAULT 'Visa',
+      is_default INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  \`);
 }
 
 export default db;

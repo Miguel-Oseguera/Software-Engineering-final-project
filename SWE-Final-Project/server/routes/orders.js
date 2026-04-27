@@ -8,11 +8,62 @@ const resend = process.env.RESEND_API_KEY
 
 const router = express.Router();
 
+// Validate a discount code
+router.post("/validate-discount", async (req, res) => {
+  const { code } = req.body;
+  if (!code) return res.status(400).json({ valid: false, error: "No code provided." });
+
+  try {
+    const result = await db.execute({
+      sql: "SELECT * FROM discount_codes WHERE code = ? AND active = 1",
+      args: [code.toUpperCase()],
+    });
+
+    if (result.rows.length === 0) {
+      return res.json({ valid: false, error: "Invalid or inactive discount code." });
+    }
+
+    const discount = result.rows[0];
+
+    // Check expiry
+    if (discount.expires_at) {
+      const expires = new Date(discount.expires_at);
+      if (expires < new Date()) {
+        return res.json({ valid: false, error: "This discount code has expired." });
+      }
+    }
+
+    res.json({
+      valid: true,
+      code: discount.code,
+      percent_off: discount.percent_off,
+    });
+  } catch (err) {
+    console.error("VALIDATE DISCOUNT ERROR:", err.message);
+    res.status(500).json({ valid: false, error: "Could not validate code." });
+  }
+});
+
 router.post("/", async (req, res) => {
-  const { items, buyer } = req.body;
+  const { items, buyer, discountCode } = req.body;
   if (!items || items.length === 0) return res.status(400).json({ error: "No items" });
 
   try {
+    // Resolve discount percent if a code was passed
+    let discountPercent = 0;
+    if (discountCode) {
+      const discResult = await db.execute({
+        sql: "SELECT * FROM discount_codes WHERE code = ? AND active = 1",
+        args: [discountCode.toUpperCase()],
+      });
+      if (discResult.rows.length > 0) {
+        const d = discResult.rows[0];
+        if (!d.expires_at || new Date(d.expires_at) >= new Date()) {
+          discountPercent = Number(d.percent_off);
+        }
+      }
+    }
+
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
 
@@ -32,6 +83,9 @@ router.post("/", async (req, res) => {
         args: [newQty, newAvail, item.id],
       });
 
+      // Apply discount to the recorded sale price
+      const salePrice = Number(item.price) * (1 - discountPercent / 100);
+
       await db.execute({
         sql: `INSERT INTO sales (id, product_id, product_name, seller, buyer, price)
               VALUES (?, ?, ?, ?, ?, ?)`,
@@ -41,7 +95,7 @@ router.post("/", async (req, res) => {
           item.name,
           product.seller || null,
           buyer || null,
-          item.price,
+          salePrice,
         ],
       });
     }
@@ -53,11 +107,13 @@ router.post("/", async (req, res) => {
     });
     const buyerEmail = userResult.rows[0]?.email;
 
-    if (buyerEmail && process.env.RESEND_API_KEY) {
+    if (buyerEmail && resend) {
       const TAX_RATE = 0.0825;
       const subtotal = items.reduce((sum, i) => sum + Number(i.price || 0), 0);
-      const tax = subtotal * TAX_RATE;
-      const total = subtotal + tax;
+      const discountAmount = subtotal * (discountPercent / 100);
+      const discountedSubtotal = subtotal - discountAmount;
+      const tax = discountedSubtotal * TAX_RATE;
+      const total = discountedSubtotal + tax;
 
       const itemRows = items.map(i =>
         `<tr>
@@ -65,6 +121,10 @@ router.post("/", async (req, res) => {
           <td style="padding:8px;border-bottom:1px solid #eee;text-align:right">$${Number(i.price).toFixed(2)}</td>
         </tr>`
       ).join("");
+
+      const discountRow = discountPercent > 0
+        ? `<p>Discount (${discountPercent}%): <strong>-$${discountAmount.toFixed(2)}</strong></p>`
+        : "";
 
       await resend.emails.send({
         from: "FakeAmazon <onboarding@resend.dev>",
@@ -85,6 +145,7 @@ router.post("/", async (req, res) => {
             </table>
             <div style="margin-top:16px;text-align:right">
               <p>Subtotal: <strong>$${subtotal.toFixed(2)}</strong></p>
+              ${discountRow}
               <p>Tax (8.25%): <strong>$${tax.toFixed(2)}</strong></p>
               <p>Shipping: <strong>FREE</strong></p>
               <p style="font-size:18px">Total: <strong>$${total.toFixed(2)}</strong></p>

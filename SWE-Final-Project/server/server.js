@@ -15,6 +15,8 @@ import ordersRouter from "./routes/orders.js";
 import adminRouter from "./routes/admin.js";
 import seedRouter from "./routes/seed.js";
 import { initDB } from "./db/index.js";
+import ratingsRouter from "./routes/ratings.js";
+import paymentRouter from "./routes/payment.js";
 
 const app = express();
 
@@ -30,6 +32,8 @@ app.use("/api/products", productsRouter);
 app.use("/api/orders", ordersRouter);
 app.use("/api/admin", adminRouter);
 app.use("/auth", authRoutes);
+app.use("/api/ratings", ratingsRouter);
+app.use("/api/payment", paymentRouter);
 
 const PORT = process.env.PORT || 5000;
 
