@@ -51,6 +51,21 @@ router.get("/newest", async (req, res) => {
   }
 });
 
+router.get("/deals", async (req, res) => {
+  try {
+    const result = await db.execute(`
+      SELECT * FROM products
+      WHERE availability = 1
+        AND original_price IS NOT NULL
+        AND original_price > price
+      ORDER BY (original_price - price) / original_price DESC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load deals" });
+  }
+});
+
 router.get("/seller/:username", async (req, res) => {
   try {
     const result = await db.execute({

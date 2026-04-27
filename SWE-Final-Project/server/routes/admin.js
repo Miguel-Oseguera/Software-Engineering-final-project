@@ -28,7 +28,6 @@ router.get("/products", async (req, res) => {
       SELECT * FROM products
       ORDER BY created_at DESC
     `);
-
     res.json(result.rows);
   } catch (err) {
     console.error("ADMIN PRODUCTS ERROR:", err.message);
@@ -73,7 +72,7 @@ router.post("/products", async (req, res) => {
 });
 
 router.put("/products/:id", async (req, res) => {
-  const { name, price, description, imageUrl, quantity, availability, seller, category } = req.body;
+  const { name, price, original_price, description, imageUrl, quantity, availability, seller, category } = req.body;
 
   try {
     const images = imageUrl ? JSON.stringify([imageUrl]) : null;
@@ -83,6 +82,7 @@ router.put("/products/:id", async (req, res) => {
         UPDATE products SET
           name = COALESCE(?, name),
           price = COALESCE(?, price),
+          original_price = COALESCE(?, original_price),
           description = COALESCE(?, description),
           images = COALESCE(?, images),
           quantity_remaining = COALESCE(?, quantity_remaining),
@@ -95,6 +95,7 @@ router.put("/products/:id", async (req, res) => {
       args: [
         name || null,
         price !== "" && price !== undefined ? Number(price) : null,
+        original_price !== "" && original_price !== undefined ? Number(original_price) : null,
         description ?? null,
         images,
         quantity !== "" && quantity !== undefined ? Number(quantity) : null,
@@ -118,7 +119,6 @@ router.delete("/products/:id", async (req, res) => {
       sql: "UPDATE products SET availability = 0, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
       args: [req.params.id],
     });
-
     res.json({ success: true });
   } catch (err) {
     console.error("ADMIN DELETE PRODUCT ERROR:", err.message);
@@ -133,7 +133,6 @@ router.get("/users", async (req, res) => {
       FROM auth_users
       ORDER BY id DESC
     `);
-
     res.json(result.rows);
   } catch (err) {
     console.error("ADMIN USERS ERROR:", err.message);
@@ -162,7 +161,6 @@ router.put("/users/:id", async (req, res) => {
         req.params.id,
       ],
     });
-
     res.json({ success: true });
   } catch (err) {
     console.error("ADMIN UPDATE USER ERROR:", err.message);
@@ -176,7 +174,6 @@ router.delete("/users/:id", async (req, res) => {
       sql: "DELETE FROM auth_users WHERE id = ?",
       args: [req.params.id],
     });
-
     res.json({ success: true });
   } catch (err) {
     console.error("ADMIN DELETE USER ERROR:", err.message);
@@ -190,7 +187,6 @@ router.get("/discounts", async (req, res) => {
       SELECT * FROM discount_codes
       ORDER BY created_at DESC
     `);
-
     res.json(result.rows);
   } catch (err) {
     console.error("ADMIN DISCOUNTS ERROR:", err.message);
@@ -213,7 +209,6 @@ router.post("/discounts", async (req, res) => {
       `,
       args: [code.toUpperCase(), Number(percentOff), expiresAt || null],
     });
-
     res.json({ success: true });
   } catch (err) {
     console.error("ADMIN CREATE DISCOUNT ERROR:", err.message);
@@ -229,7 +224,6 @@ router.put("/discounts/:code", async (req, res) => {
       sql: "UPDATE discount_codes SET active = ? WHERE code = ?",
       args: [Number(active), req.params.code],
     });
-
     res.json({ success: true });
   } catch (err) {
     console.error("ADMIN UPDATE DISCOUNT ERROR:", err.message);
@@ -241,18 +235,14 @@ router.get("/orders/history", async (req, res) => {
   const { sort } = req.query;
 
   let orderBy = "sold_at DESC";
-
   if (sort === "customer") orderBy = "buyer ASC";
   if (sort === "dollars") orderBy = "price DESC";
   if (sort === "date") orderBy = "sold_at DESC";
 
   try {
     const result = await db.execute(`
-      SELECT *
-      FROM sales
-      ORDER BY ${orderBy}
+      SELECT * FROM sales ORDER BY ${orderBy}
     `);
-
     res.json(result.rows);
   } catch (err) {
     console.error("ADMIN ORDERS ERROR:", err.message);
@@ -263,12 +253,8 @@ router.get("/orders/history", async (req, res) => {
 router.get("/orders/current", async (req, res) => {
   try {
     const result = await db.execute(`
-      SELECT *
-      FROM sales
-      ORDER BY sold_at DESC
-      LIMIT 25
+      SELECT * FROM sales ORDER BY sold_at DESC LIMIT 25
     `);
-
     res.json(result.rows);
   } catch (err) {
     console.error("ADMIN CURRENT ORDERS ERROR:", err.message);

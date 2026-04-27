@@ -7,12 +7,30 @@ const CATEGORIES = ["All","beauty","fragrances","furniture","groceries","home-de
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
+  const [rating, setRating] = useState({ average: null, count: 0 });
 
-  const getThumbnail = (product) => {
-    try {
-      const imgs = JSON.parse(product.images);
-      return imgs[0] || "";
-    } catch { return ""; }
+  useEffect(() => {
+    fetch(`/api/ratings/${product.id}/summary`)
+      .then(r => r.json())
+      .then(setRating)
+      .catch(() => {});
+  }, [product.id]);
+
+  const avg = rating.average ? Number(rating.average) : 0;
+  const fullStars = Math.floor(avg);
+  const hasHalf = avg - fullStars >= 0.5;
+
+  const renderStars = () =>
+    [1,2,3,4,5].map(s => {
+      let cls = "mp-star-icon empty";
+      if (s <= fullStars) cls = "mp-star-icon filled";
+      else if (s === fullStars + 1 && hasHalf) cls = "mp-star-icon half";
+      return <span key={s} className={cls}>★</span>;
+    });
+
+  const getThumbnail = (p) => {
+    try { return JSON.parse(p.images)[0] || ""; }
+    catch { return ""; }
   };
 
   const thumb = getThumbnail(product);
@@ -29,8 +47,14 @@ function ProductCard({ product }) {
         <p className="mp-product-name">{product.name}</p>
         <p className="mp-product-price">${Number(product.price).toFixed(2)}</p>
         <div className="mp-product-rating">
-          <span className="mp-stars">★★★★☆</span>
-          <span className="mp-rating-count">(142)</span>
+          {rating.count > 0 ? (
+            <>
+              <div className="mp-stars-wrap">{renderStars()}</div>
+              <span className="mp-rating-count">({rating.count})</span>
+            </>
+          ) : (
+            <span className="mp-no-ratings">No ratings yet</span>
+          )}
         </div>
         {product.quantity_remaining > 0
           ? <span className="mp-in-stock">In Stock</span>
@@ -97,7 +121,6 @@ export default function MainPage() {
 
   const clearFilters = () => { setCategory("All"); setMinPrice(""); setMaxPrice(""); setSort("default"); setSearch(""); };
 
-  // chunk into rows of 6
   const chunk = (arr, size) => {
     const out = [];
     for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
