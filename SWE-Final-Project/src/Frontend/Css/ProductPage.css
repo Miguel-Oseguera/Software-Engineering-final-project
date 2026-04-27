@@ -728,3 +728,144 @@
   background: #ccc;
   cursor: not-allowed;
 }
+
+.pd-bundle-section {
+  background: #fff;
+  border: 1px solid #eadfd2;
+  border-radius: 12px;
+  margin: 24px 0;
+  padding: 24px;
+}
+
+.pd-bundle-header {
+  border-bottom: 1px solid #eadfd2;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+}
+
+.pd-bundle-header h2 {
+  margin: 0 0 6px;
+}
+
+.pd-bundle-header p {
+  color: #777;
+  margin: 0;
+}
+
+.pd-bundle-card {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 24px;
+  align-items: center;
+  border-bottom: 1px solid #eadfd2;
+  padding: 18px 0;
+}
+
+.pd-bundle-card:last-child {
+  border-bottom: none;
+}
+
+.pd-bundle-items {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  overflow-x: auto;
+}
+
+.pd-bundle-item {
+  min-width: 150px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.pd-bundle-item img,
+.pd-bundle-no-img {
+  width: 130px;
+  height: 110px;
+  object-fit: contain;
+  border: 1px solid #eadfd2;
+  border-radius: 10px;
+  background: #fff;
+  margin: 0 auto 8px;
+}
+
+.pd-bundle-no-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+}
+
+.pd-bundle-item p {
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.pd-bundle-item span {
+  color: #9a3d0b;
+  font-weight: 700;
+}
+
+.pd-bundle-plus {
+  font-size: 28px;
+  font-weight: 700;
+  color: #9a3d0b;
+}
+
+.pd-bundle-summary {
+  border-left: 1px solid #eadfd2;
+  padding-left: 24px;
+}
+
+.pd-bundle-summary h3 {
+  margin: 0 0 8px;
+}
+
+.pd-bundle-discount {
+  color: #4a7c59;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+
+.pd-bundle-original {
+  color: #777;
+  margin: 0 0 4px;
+  text-decoration: line-through;
+}
+
+.pd-bundle-total {
+  color: #9a3d0b;
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+
+.pd-bundle-save {
+  color: #4a7c59;
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+
+.pd-bundle-summary button {
+  background: #9a3d0b;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 12px 16px;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .pd-bundle-card {
+    grid-template-columns: 1fr;
+  }
+
+  .pd-bundle-summary {
+    border-left: none;
+    border-top: 1px solid #eadfd2;
+    padding-left: 0;
+    padding-top: 16px;
+  }
+}

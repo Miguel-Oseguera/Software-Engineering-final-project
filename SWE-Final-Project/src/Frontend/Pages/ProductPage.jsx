@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../Css/ProductPage.css";
 
+const API = import.meta.env.VITE_API_URL || "";
+
 function StarPicker({ value, onChange }) {
   const [hovered, setHovered] = useState(0);
   return (
@@ -39,6 +41,8 @@ export default function ProductPage() {
 
   const [ratingSummary, setRatingSummary] = useState({ average: null, count: 0 });
   const [reviews, setReviews] = useState([]);
+  const [bundleDeals, setBundleDeals] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newStars, setNewStars] = useState(0);
   const [newComment, setNewComment] = useState("");
@@ -50,18 +54,29 @@ export default function ProductPage() {
   })();
 
   const loadRatings = () => {
-    fetch(`/api/ratings/${id}/summary`)
+    fetch(`${API}/api/ratings/${id}/summary`)
       .then(r => r.json()).then(setRatingSummary).catch(() => {});
-    fetch(`/api/ratings/${id}`)
+    fetch(`${API}/api/ratings/${id}`)
       .then(r => r.json())
       .then(data => setReviews(Array.isArray(data) ? data : []))
       .catch(() => {});
   };
 
   useEffect(() => {
-    fetch(`/api/products/${id}`)
+    fetch(`${API}/api/products/${id}`)
       .then(res => res.json())
       .then(data => setProduct(data));
+
+    fetch(`${API}/api/products/all`)
+      .then(res => res.json())
+      .then(data => setAllProducts(Array.isArray(data) ? data : []))
+      .catch(() => setAllProducts([]));
+
+    fetch(`${API}/api/admin/bundle-deals`)
+      .then(res => res.json())
+      .then(data => setBundleDeals(Array.isArray(data) ? data : []))
+      .catch(() => setBundleDeals([]));
+
     loadRatings();
   }, [id]);
 
@@ -85,10 +100,17 @@ export default function ProductPage() {
     setAdded(true);
   };
 
+  const handleAddBundleToCart = (items) => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    items.forEach(item => cart.push(item));
+    localStorage.setItem("cart", JSON.stringify(cart));
+    setAdded(true);
+  };
+
   const handleSubmitRating = async () => {
     if (!newStars) { setSubmitStatus("Please select a star rating."); return; }
     try {
-      const res = await fetch(`/api/ratings/${id}`, {
+      const res = await fetch(`${API}/api/ratings/${id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ stars: newStars, comment: newComment, username }),
@@ -118,6 +140,44 @@ export default function ProductPage() {
   const images = JSON.parse(product.images || "[]");
   const hasMultipleImages = images.length > 1;
   const avg = ratingSummary.average ? Number(ratingSummary.average) : 0;
+
+  const activeBundleDeals = bundleDeals
+    .filter(deal => Number(deal.active) === 1)
+    .map(deal => {
+      let ids = [];
+
+      try {
+        ids = JSON.parse(deal.product_ids || "[]");
+      } catch {
+        ids = [];
+      }
+
+      const hasCurrentProduct = ids.some(bundleId => String(bundleId) === String(product.id));
+      const bundleProducts = ids
+        .map(bundleId => allProducts.find(p => String(p.id) === String(bundleId)))
+        .filter(Boolean);
+
+      return {
+        ...deal,
+        ids,
+        hasCurrentProduct,
+        bundleProducts,
+      };
+    })
+    .filter(deal => deal.hasCurrentProduct && deal.bundleProducts.length >= 2);
+
+  const getBundleTotal = (items) => {
+    return items.reduce((sum, item) => sum + Number(item.price || 0), 0);
+  };
+
+  const getProductImage = (item) => {
+    try {
+      const itemImages = JSON.parse(item.images || "[]");
+      return itemImages[0] || "";
+    } catch {
+      return "";
+    }
+  };
 
   return (
     <div className="pd-container">
@@ -265,6 +325,56 @@ export default function ProductPage() {
           </div>
         </div>
       </div>
+
+      {activeBundleDeals.length > 0 && (
+        <div className="pd-bundle-section">
+          <div className="pd-bundle-header">
+            <h2>Frequently bought together</h2>
+            <p>Bundle these items and save on the total purchase.</p>
+          </div>
+
+          {activeBundleDeals.map((deal) => {
+            const total = getBundleTotal(deal.bundleProducts);
+            const discountAmount = total * (Number(deal.percent_off || 0) / 100);
+            const discountedTotal = total - discountAmount;
+
+            return (
+              <div key={deal.id} className="pd-bundle-card">
+                <div className="pd-bundle-items">
+                  {deal.bundleProducts.map((item, index) => (
+                    <React.Fragment key={item.id}>
+                      <div className="pd-bundle-item" onClick={() => navigate(`/product/${item.id}`)}>
+                        {getProductImage(item) ? (
+                          <img src={getProductImage(item)} alt={item.name} />
+                        ) : (
+                          <div className="pd-bundle-no-img">No Image</div>
+                        )}
+                        <p>{item.name}</p>
+                        <span>${Number(item.price || 0).toFixed(2)}</span>
+                      </div>
+
+                      {index < deal.bundleProducts.length - 1 && (
+                        <div className="pd-bundle-plus">+</div>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
+
+                <div className="pd-bundle-summary">
+                  <h3>{deal.name}</h3>
+                  <p className="pd-bundle-discount">{deal.percent_off}% off bundle</p>
+                  <p className="pd-bundle-original">Regular total: ${total.toFixed(2)}</p>
+                  <p className="pd-bundle-total">Bundle total: ${discountedTotal.toFixed(2)}</p>
+                  <p className="pd-bundle-save">You save ${discountAmount.toFixed(2)}</p>
+                  <button onClick={() => handleAddBundleToCart(deal.bundleProducts)}>
+                    Add bundle to Cart
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* REVIEWS SECTION */}
       <div className="pd-reviews-section">

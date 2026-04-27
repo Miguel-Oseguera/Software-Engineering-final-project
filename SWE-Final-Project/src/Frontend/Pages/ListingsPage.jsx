@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import MiniProduct from "./MiniProduct";
 import "../Css/ListingsPage.css";
 
+const API = import.meta.env.VITE_API_URL || "";
+
 const CATEGORIES = [
   "All", "beauty", "fragrances", "furniture", "groceries",
   "home-decoration", "kitchen-accessories", "laptops", "mens-shirts",
@@ -27,7 +29,7 @@ export default function ListingsPage() {
   );
 
   useEffect(() => {
-    fetch("/api/products/all")
+    fetch(`${API}/api/products/all`)
       .then(res => res.json())
       .then(data => setProducts(Array.isArray(data) ? data : []))
       .catch(() => setProducts([]));

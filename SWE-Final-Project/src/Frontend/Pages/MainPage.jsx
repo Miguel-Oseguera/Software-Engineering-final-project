@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "../Css/MainPage.css";
 import Navbar from "../components/Navbar";
 
+const API = import.meta.env.VITE_API_URL || "";
+
 const CATEGORIES = ["All","beauty","fragrances","furniture","groceries","home-decoration","kitchen-accessories","laptops","mens-shirts","mens-shoes","mens-watches","mobile-accessories","skin-care","smartphones","sports-accessories","sunglasses","tablets","tops","womens-bags","womens-dresses","womens-jewellery","womens-shoes","womens-watches"];
 
 function ProductCard({ product }) {
@@ -10,7 +12,7 @@ function ProductCard({ product }) {
   const [rating, setRating] = useState({ average: null, count: 0 });
 
   useEffect(() => {
-    fetch(`/api/ratings/${product.id}/summary`)
+    fetch(`${API}/api/ratings/${product.id}/summary`)
       .then(r => r.json())
       .then(setRating)
       .catch(() => {});
@@ -95,11 +97,11 @@ export default function MainPage() {
   );
 
   useEffect(() => {
-    fetch("/api/products/trending")
+    fetch(`${API}/api/products/trending`)
       .then(r => r.json()).then(setTrending).catch(console.error);
-    fetch("/api/products/newest")
+    fetch(`${API}/api/products/newest`)
       .then(r => r.json()).then(setNewest).catch(console.error);
-    fetch("/api/products/all")
+    fetch(`${API}/api/products/all`)
       .then(r => r.json()).then(data => setAllProducts(Array.isArray(data) ? data : [])).catch(console.error);
   }, []);
 

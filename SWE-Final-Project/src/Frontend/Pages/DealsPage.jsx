@@ -2,6 +2,8 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Css/DealsPage.css";
 
+const API = import.meta.env.VITE_API_URL || "";
+
 function DealCard({ product, onCartChange }) {
   const navigate = useNavigate();
   const [added, setAdded] = useState(false);
@@ -69,10 +71,98 @@ function DealCard({ product, onCartChange }) {
   );
 }
 
+function BundleDealCard({ deal, products, onCartChange }) {
+  const navigate = useNavigate();
+  const [added, setAdded] = useState(false);
+
+  let ids = [];
+  try {
+    ids = JSON.parse(deal.product_ids || "[]");
+  } catch {
+    ids = [];
+  }
+
+  const bundleProducts = ids
+    .map(id => products.find(p => String(p.id) === String(id)))
+    .filter(Boolean);
+
+  if (bundleProducts.length < 2 || Number(deal.active) !== 1) return null;
+
+  const total = bundleProducts.reduce((sum, p) => sum + Number(p.price || 0), 0);
+  const discountAmount = total * (Number(deal.percent_off || 0) / 100);
+  const finalTotal = total - discountAmount;
+
+  const getImage = (product) => {
+    try {
+      const imgs = JSON.parse(product.images || "[]");
+      return imgs[0] || "";
+    } catch {
+      return "";
+    }
+  };
+
+  const addBundleToCart = () => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    bundleProducts.forEach(p => cart.push(p));
+    localStorage.setItem("cart", JSON.stringify(cart));
+    if (onCartChange) onCartChange(cart.length);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  };
+
+  return (
+    <div className="dp-bundle-card">
+      <div className="dp-bundle-top">
+        <div>
+          <h3>{deal.name}</h3>
+          <p>{deal.percent_off}% off when bought together</p>
+        </div>
+        <span className="dp-bundle-badge">Bundle Deal</span>
+      </div>
+
+      <div className="dp-bundle-content">
+        <div className="dp-bundle-items">
+          {bundleProducts.map((product, index) => (
+            <React.Fragment key={product.id}>
+              <div
+                className="dp-bundle-item"
+                onClick={() => navigate(`/product/${product.id}`)}
+              >
+                {getImage(product) ? (
+                  <img src={getImage(product)} alt={product.name} />
+                ) : (
+                  <div className="dp-bundle-no-img">No Image</div>
+                )}
+                <p>{product.name}</p>
+                <span>${Number(product.price || 0).toFixed(2)}</span>
+              </div>
+
+              {index < bundleProducts.length - 1 && (
+                <div className="dp-bundle-plus">+</div>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+
+        <div className="dp-bundle-summary">
+          <p className="dp-bundle-original">Regular total: ${total.toFixed(2)}</p>
+          <p className="dp-bundle-final">Bundle total: ${finalTotal.toFixed(2)}</p>
+          <p className="dp-bundle-save">You save ${discountAmount.toFixed(2)}</p>
+          <button onClick={addBundleToCart}>
+            {added ? "Added!" : "Add Bundle to Cart"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function DealsPage() {
   const navigate = useNavigate();
 
   const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const [bundleDeals, setBundleDeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cartCount, setCartCount] = useState(
     () => (JSON.parse(localStorage.getItem("cart")) || []).length
@@ -87,14 +177,21 @@ export default function DealsPage() {
   const pageSize = 12;
 
   useEffect(() => {
-    fetch("/api/products/deals")
-      .then(res => res.json())
-      .then(data => {
-        setProducts(Array.isArray(data) ? data : []);
+    Promise.all([
+      fetch(`${API}/api/products/deals`).then(res => res.json()),
+      fetch(`${API}/api/products/all`).then(res => res.json()),
+      fetch(`${API}/api/admin/bundle-deals`).then(res => res.json()),
+    ])
+      .then(([dealsData, allProductsData, bundleData]) => {
+        setProducts(Array.isArray(dealsData) ? dealsData : []);
+        setAllProducts(Array.isArray(allProductsData) ? allProductsData : []);
+        setBundleDeals(Array.isArray(bundleData) ? bundleData : []);
         setLoading(false);
       })
       .catch(() => {
         setProducts([]);
+        setAllProducts([]);
+        setBundleDeals([]);
         setLoading(false);
       });
   }, []);
@@ -124,6 +221,8 @@ export default function DealsPage() {
     return list;
   }, [products, search, maxPrice, minDiscount, inStockOnly, sort]);
 
+  const activeBundleDeals = bundleDeals.filter(deal => Number(deal.active) === 1);
+
   const totalPages = Math.ceil(filtered.length / pageSize);
   const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
 
@@ -147,8 +246,6 @@ export default function DealsPage() {
 
   return (
     <div className="dp-container">
-
-      {/* HEADER */}
       <header className="dp-header">
         <div className="dp-logo-wrap" onClick={() => navigate("/")}>
           <span className="dp-logo-fake">fake</span>
@@ -175,7 +272,6 @@ export default function DealsPage() {
         </div>
       </header>
 
-      {/* NAV */}
       <nav className="dp-nav">
         {navLinks.map(([label, path]) => (
           <button
@@ -188,18 +284,34 @@ export default function DealsPage() {
         ))}
       </nav>
 
-      {/* BANNER */}
       <div className="dp-banner">
         <div className="dp-banner-left">
           <h1 className="dp-banner-title">Today's <span>Deals</span></h1>
           <span className="dp-banner-sub">LIMITED TIME OFFERS</span>
         </div>
         <div className="dp-banner-count">
-          {filtered.length} deal{filtered.length !== 1 ? "s" : ""} available
+          {filtered.length + activeBundleDeals.length} deal{filtered.length + activeBundleDeals.length !== 1 ? "s" : ""} available
         </div>
       </div>
 
-      {/* FILTER BAR */}
+      {activeBundleDeals.length > 0 && (
+        <div className="dp-bundle-section">
+          <div className="dp-bundle-section-header">
+            <h2>Bundle Deals</h2>
+            <p>Buy these items together and save more.</p>
+          </div>
+
+          {activeBundleDeals.map(deal => (
+            <BundleDealCard
+              key={deal.id}
+              deal={deal}
+              products={allProducts}
+              onCartChange={setCartCount}
+            />
+          ))}
+        </div>
+      )}
+
       <div className="dp-filter-bar">
         <span className="dp-filter-label">Max Price</span>
         <input
@@ -244,13 +356,12 @@ export default function DealsPage() {
           <option value="discount-desc">Biggest Discount</option>
           <option value="price-asc">Price: Low to High</option>
           <option value="price-desc">Price: High to Low</option>
-          <option value="name">Name A–Z</option>
+          <option value="name">Name A-Z</option>
         </select>
 
         <button className="dp-filter-clear" onClick={clearFilters}>Clear Filters</button>
       </div>
 
-      {/* BODY */}
       <div className="dp-body">
         {(search || maxPrice || minDiscount !== 10 || inStockOnly) && (
           <div className="dp-results-header">

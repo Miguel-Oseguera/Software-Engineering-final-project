@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Css/SellingPage.css";
 
+const API = import.meta.env.VITE_API_URL || "";
+
 export default function SellingPage() {
   const navigate = useNavigate();
   const raw = localStorage.getItem("user");
@@ -18,7 +20,7 @@ export default function SellingPage() {
   const [editFields, setEditFields] = useState({});
 
   const fetchListings = () => {
-    fetch(`/api/products/seller/${username}`)
+    fetch(`${API}/api/products/seller/${username}`)
       .then(res => res.json())
       .then(data => setListings(Array.isArray(data) ? data : []))
       .catch(() => setListings([]));
@@ -32,7 +34,7 @@ export default function SellingPage() {
     e.preventDefault();
     if (!name || !price) { setMessage("Name and price are required."); return; }
 
-    const res = await fetch("/api/products", {
+    const res = await fetch(`${API}/api/products`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, price, description, imageUrl, quantity, seller: username }),
@@ -49,7 +51,7 @@ export default function SellingPage() {
   };
 
   const handleRemove = async (id) => {
-    await fetch(`/api/products/${id}`, { method: "DELETE" });
+    await fetch(`${API}/api/products/${id}`, { method: "DELETE" });
     fetchListings();
   };
 
@@ -67,7 +69,7 @@ export default function SellingPage() {
   };
 
   const handleEdit = async (id) => {
-    const res = await fetch(`/api/products/${id}`, {
+    const res = await fetch(`${API}/api/products/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(editFields),

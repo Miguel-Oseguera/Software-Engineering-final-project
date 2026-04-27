@@ -18,6 +18,14 @@ export async function initDB() {
     )
   `);
 
+  try { await db.execute(`ALTER TABLE auth_users ADD COLUMN is_admin INTEGER DEFAULT 0`); } catch {}
+
+  await db.execute(`
+    UPDATE auth_users
+    SET is_admin = 0
+    WHERE is_admin IS NULL
+  `);
+
   await db.execute(`
     CREATE TABLE IF NOT EXISTS products (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,7 +43,6 @@ export async function initDB() {
   try { await db.execute(`ALTER TABLE products ADD COLUMN category TEXT`); } catch {}
   try { await db.execute(`ALTER TABLE products ADD COLUMN original_price REAL`); } catch {}
   try { await db.execute(`ALTER TABLE products ADD COLUMN updated_at TEXT`); } catch {}
-  try { await db.execute(`ALTER TABLE auth_users ADD COLUMN is_admin INTEGER DEFAULT 0`); } catch {}
 
   await db.execute(`
     CREATE TABLE IF NOT EXISTS sales (
@@ -55,6 +62,17 @@ export async function initDB() {
       percent_off REAL NOT NULL,
       active INTEGER DEFAULT 1,
       expires_at TEXT,
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS bundle_deals (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      product_ids TEXT NOT NULL,
+      percent_off REAL NOT NULL,
+      active INTEGER DEFAULT 1,
       created_at TEXT DEFAULT (datetime('now'))
     )
   `);
